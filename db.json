@@ -1,0 +1,53 @@
+{
+  "studies": [
+    {
+      "id": 1,
+      "title": "React",
+      "priority": "Alta",
+      "progress": "modulo 5",
+      "done": false,
+      "lastStudiedAt": "Sat Mar 28 2026",
+      "confidence": 1,
+      "nextReview": "Sun Mar 29 2026"
+    },
+    {
+      "title": "feefed",
+      "done": false,
+      "id": 2,
+      "progress": "",
+      "lastStudiedAt": "Thu Mar 26 2026",
+      "confidence": 4,
+      "priority": "low",
+      "nextReview": "Fri Apr 03 2026"
+    },
+    {
+      "title": "3",
+      "done": false,
+      "id": 5,
+      "progress": "",
+      "lastStudiedAt": "Fri Mar 27 2026",
+      "confidence": 2,
+      "priority": "Alta",
+      "nextReview": "Sun Mar 29 2026"
+    },
+    {
+      "title": "teste 9",
+      "done": false,
+      "progress": "",
+      "lastStudiedAt": "",
+      "priority": "Alta",
+      "confidence": 1,
+      "id": 16,
+      "nextReview": "Sun Mar 29 2026"
+    },
+    {
+      "title": "teste 2",
+      "done": false,
+      "progress": "",
+      "lastStudiedAt": "",
+      "priority": "Media",
+      "confidence": 0,
+      "id": 17
+    }
+  ]
+}
