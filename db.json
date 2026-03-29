@@ -1,0 +1,44 @@
+{
+  "studies": [
+    {
+      "id": 1,
+      "title": "React",
+      "priority": "Alta",
+      "progress": "modulo 5",
+      "done": false,
+      "lastStudiedAt": "Sat Mar 28 2026",
+      "confidence": 1,
+      "nextReview": "Sun Mar 29 2026"
+    },
+    {
+      "title": "feefed",
+      "done": false,
+      "id": 2,
+      "progress": "",
+      "lastStudiedAt": "Thu Mar 26 2026",
+      "confidence": 1,
+      "priority": "Alta",
+      "nextReview": "Mon Mar 30 2026"
+    },
+    {
+      "title": "3",
+      "done": false,
+      "id": 5,
+      "progress": "",
+      "lastStudiedAt": "Fri Mar 27 2026",
+      "confidence": 1,
+      "priority": "Alta",
+      "nextReview": "Mon Mar 30 2026"
+    },
+    {
+      "title": "teste 2",
+      "done": false,
+      "progress": "",
+      "lastStudiedAt": "",
+      "priority": "Baixa",
+      "confidence": 5,
+      "id": 17,
+      "nextReview": "Mon Apr 13 2026"
+    }
+  ]
+}

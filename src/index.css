@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*  LIGHT MODE (SUAVE E LEGÍVEL) */
+body {
+  @apply bg-slate-100 text-slate-800;
+}
+
+/*  DARK MODE (CONTRASTE EQUILIBRADO) */
+.dark body {
+  @apply bg-slate-900 text-slate-100;
+}
+
+/*  CARDS PADRÃO */
+.card {
+  @apply bg-white border border-slate-200 shadow-sm rounded-2xl;
+}
+
+.dark .card {
+  @apply bg-slate-800 border-slate-700;
+}
+
+/*  BOTÕES PRIMÁRIOS */
+.btn-primary {
+  @apply bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition active:scale-95;
+}
+
+/*  BOTÕES SECUNDÁRIOS */
+.btn-secondary {
+  @apply bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl;
+}
+
+.dark .btn-secondary {
+  @apply bg-slate-700 hover:bg-slate-600 text-white;
+}
