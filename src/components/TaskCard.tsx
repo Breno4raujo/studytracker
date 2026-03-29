@@ -36,7 +36,6 @@ export default function TaskCard({
     Baixa: "text-green-500",
   };
 
-
   type Priority = Study["priority"];
 
   const priorityKey: Priority = item.priority ?? "Media";
@@ -50,29 +49,40 @@ export default function TaskCard({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -10, scale: 0.98 }}
       transition={{ duration: 0.25 }}
-      className="
-  group
-  bg-white dark:bg-slate-800
-  border border-slate-200 dark:border-slate-700
-  shadow-sm
-  p-5 rounded-2xl
-  hover:shadow-md
-  transition-all duration-200
-  flex flex-col gap-4
-"
+      className="group
+      bg-white dark:bg-slate-800
+      border border-slate-200 dark:border-slate-700
+      shadow-sm p-5 rounded-2xl
+      hover:shadow-md
+      transition-all duration-200
+      hover:-translate-y-1
+      flex flex-col gap-4"
     >
       {/* topo */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={item.done}
-            onChange={() => toggle(item)}
-          />
-          <span
-            className={`font-medium ${item.done
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={item.done}
+              onChange={() => toggle(item)}
+              aria-label={`Marcar ${item.title} como concluída`}
+              className="w-4 h-4
+              accent-green-600
+              cursor-pointer"
+            />
+            <span
+              className={`font-medium ${item.done
                 ? "line-through text-slate-400"
                 : "text-slate-900 dark:text-white"
+                }`}
+            >
+            </span>
+          </label>
+          <span
+            className={`font-medium ${item.done
+              ? "line-through text-slate-400"
+              : "text-slate-900 dark:text-white"
               }`}
           >
             {item.title}
@@ -84,20 +94,23 @@ export default function TaskCard({
             setTaskToDelete(item);
             setDeleteModal(true);
           }}
-          className="
-  opacity-0 group-hover:opacity-100 
-  transition
-  text-slate-400 hover:text-red-500
-"
+          className=" flex items-center gap-2 
+          px-2 py-1 rounded-md opacity-0 group-hover:opacity-100
+          transition active:scale-95
+          text-slate-400 hover:text-red-500" 
+          aria-label={`Deletar tarefa ${item.title}`}
+          title="Deletar tarefa"
         >
           <Trash2 size={30} />
+          <span className=" text-sm font-medium hidden sm:inline">Deletar</span>
         </button>
       </div>
 
-
       {/* prioridade */}
-      <p className={`text-xs ${priorityColor[priorityKey]}`}>
-        Prioridade: {priorityLabel[priorityKey]}
+      <p className={`text-lg font-semibold
+      ${priorityColor[priorityKey]}`}
+      > 
+      Prioridade: {priorityLabel[priorityKey]}
       </p>
 
       {/* progresso */}
@@ -111,14 +124,16 @@ export default function TaskCard({
           <button
             key={star}
             onClick={() => updateConfidence(item, star)}
+            aria-label={`Deletar tarefa ${item.title}`}
+            title="Deletar tarefa"
           >
             <Star
               size={20}
               className={
-  star <= (item.confidence || 0)
-    ? "text-yellow-400"
-    : "text-slate-400 hover:text-yellow-300"
-}
+                star <= (item.confidence || 0)
+                  ? "text-yellow-400"
+                  : "text-slate-400 hover:text-yellow-300"
+              }
             />
           </button>
         ))}

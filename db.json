@@ -16,9 +16,9 @@
       "id": 2,
       "progress": "",
       "lastStudiedAt": "Thu Mar 26 2026",
-      "confidence": 4,
-      "priority": "low",
-      "nextReview": "Fri Apr 03 2026"
+      "confidence": 1,
+      "priority": "Alta",
+      "nextReview": "Mon Mar 30 2026"
     },
     {
       "title": "3",
@@ -26,28 +26,19 @@
       "id": 5,
       "progress": "",
       "lastStudiedAt": "Fri Mar 27 2026",
-      "confidence": 2,
-      "priority": "Alta",
-      "nextReview": "Sun Mar 29 2026"
-    },
-    {
-      "title": "teste 9",
-      "done": false,
-      "progress": "",
-      "lastStudiedAt": "",
-      "priority": "Alta",
       "confidence": 1,
-      "id": 16,
-      "nextReview": "Sun Mar 29 2026"
+      "priority": "Alta",
+      "nextReview": "Mon Mar 30 2026"
     },
     {
       "title": "teste 2",
       "done": false,
       "progress": "",
       "lastStudiedAt": "",
-      "priority": "Media",
-      "confidence": 0,
-      "id": 17
+      "priority": "Baixa",
+      "confidence": 5,
+      "id": 17,
+      "nextReview": "Mon Apr 13 2026"
     }
   ]
 }

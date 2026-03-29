@@ -5,13 +5,15 @@ import TaskCard from "../components/TaskCard";
 import Loader from "../components/Loader";
 import { useStudies } from "../hooks/useStudies";
 import { AnimatePresence, motion } from "framer-motion";
-import { Moon, Sun, BookOpen, Play, Pin, X, Menu, Save, SaveOff, Loader2 } from "lucide-react";
+import { Moon, Sun, BookOpen, Play, Pin, X, Menu, Save, SaveOff, Loader2, ChevronRight } from "lucide-react";
+import React from "react";
 
+type Filter = "all" | "done" | "pending";
 
 export default function Home() {
   const { list, loading, error, add, toggle, remove, updateProgress, updateConfidence } = useStudies();
   const [title, setTitle] = useState("");
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const [dark, setDark] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Study | null>(null);
@@ -21,13 +23,9 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [adding, setAdding] = useState(false);
   const [toast, setToast] = useState("");
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-
-  const filtered = list.filter((item: Study) => {
-    if (filter === "done") return item.done;
-    if (filter === "pending") return !item.done;
-    return true;
-  });
 
   const completedCount = list.filter((i: Study) => i.done).length;
   const totalCount = list.length;
@@ -89,9 +87,54 @@ export default function Home() {
     }
   }, [toast]);
 
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const touch = e.targetTouches[0];
+    if (!touch) return;
+
+    const x = touch.clientX;
+
+    // só ativa perto da borda esquerda
+    if (x < 100) {
+      setTouchStart(x);
+    }
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    const touch = e.targetTouches[0];
+    if (!touch) return;
+    setTouchEnd(touch.clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (touchStart === null || touchEnd === null) return;
+
+    const distance = touchEnd - touchStart;
+
+    // swipe para direita (abrir)
+    if (distance > minSwipeDistance) {
+      setMobileMenuOpen(true);
+    }
+
+    //  swipe para esquerda (fechar)
+    if (distance < -minSwipeDistance) {
+      setMobileMenuOpen(false);
+    }
+
+    setTouchStart(null);
+    setTouchEnd(null);
+
+  };
+
   return (
     <main className={`${dark ? "dark" : ""} font-sans`}>
-      <div className="flex min-h-screen bg-slate-100 dark:bg-slate-900 transition-colors">
+
+      <div className="flex min-h-screen bg-slate-100 dark:bg-slate-900 transition-colors"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+          >
 
         <Sidebar setFilter={setFilter} filter={filter} closeMobile={() => setMobileMenuOpen(false)} />
 
@@ -102,7 +145,10 @@ export default function Home() {
 
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800"
+              aria-label="Abrir menu"
+              className="md:hidden p-2 rounded-lg
+              text-slate-700 dark:text-slate-200
+              hover:bg-slate-200 dark:hover:bg-slate-800"
             >
               <Menu size={24} />
             </button>
@@ -112,32 +158,43 @@ export default function Home() {
             </h1>
 
             <button
+              aria-label="Alternar tema"
               onClick={() => setDark(!dark)}
               className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg 
-    bg-slate-100 dark:bg-slate-800
-    hover:bg-slate-200 dark:hover:bg-slate-700 
-    transition"
+              bg-slate-100 dark:bg-slate-800
+              text-slate-700 dark:text-slate-200
+              hover:bg-slate-200 dark:hover:bg-slate-700 transition"
             >
-              {dark ? <Sun size={30} className="text-yellow-400" /> : <Moon size={30} className="text-slate-700" />}
+              {dark ? (
+                <>
+                  <Sun size={30} className="text-yellow-400" />
+                  <span className="hidden sm:inline">Claro</span>
+                </>
+              ) : (
+                <>
+                  <Moon size={30} />
+                  <span className="hidden sm:inline">Escuro</span>
+                </>
+              )}
             </button>
           </div>
 
-{error && (
-        <p className="text-red-500 text-sm mb-4">{error}</p>
-      )}
+          {error && (
+            <p className="text-red-500 text-sm mb-4">{error}</p>
+          )}
 
 
           {/* input */}
           <div className="flex flex-col sm:flex-row gap-3 mb-8">
 
-            <label htmlFor="title" className="sr-only">
-              Nova tarefa
-            </label>
-
             <input
+              id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="flex-1 px-4 py-3 rounded-xl border border-slate-300 bg-white dark:bg-slate-700 shadow-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-4 py-3 rounded-xl border 
+              border-slate-300 bg-white dark:bg-slate-700 
+              shadow-sm text-slate-800 dark:text-white 
+              focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Nova tarefa..."
             />
 
@@ -215,16 +272,16 @@ export default function Home() {
 
           {/* MODAL DELETE */}
           {modalOpen && selectedTask && (
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div role="dialog"
+              aria-modal="true"
+              aria-labelledby="modal-title" className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
-              <div className="
-  bg-white dark:bg-slate-800
-  p-6 rounded-2xl
-  shadow-2xl
-  animate-in fade-in zoom-in
-">
+              <div className="bg-white dark:bg-slate-800 
+              np-6 rounded-2xl shadow-2xl 
+              animate-in fade-in zoom-in transition-all p-6 w-full max-w-sm"
+              >
 
-                <h2 className="text-lg font-semibold mb-4">
+                <h2 id="modal-title" className="text-lg font-semibold mb-4">
                   <span className="text-slate-700 dark:text-slate-200" >Até onde você chegou em "{selectedTask?.title}" dessa vez?</span>
                 </h2>
 
@@ -232,15 +289,19 @@ export default function Home() {
                   {selectedTask?.title}
                 </p>
 
+                <label htmlFor="progress" className="text-sm text-slate-600 dark:text-slate-300 ">
+                  Progresso do estudo
+                </label>
+
                 <input
+                  id="progress"
                   value={progressInput}
                   onChange={(e) => setProgressInput(e.target.value)}
                   className="w-full p-2 mb-4 rounded-lg 
-        border border-slate-300 
-        bg-white dark:bg-slate-700 
-        text-sm 
-        text-slate-800 dark:text-white
-        outline-none"
+                  border border-slate-300 
+                  bg-white dark:bg-slate-700 
+                  text-sm text-slate-800 dark:text-white outline-none
+                  focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Ex: Aula 4, capítulo 2..."
                 />
 
@@ -249,14 +310,15 @@ export default function Home() {
                   <button
                     onClick={() => setModalOpen(false)}
                   >
-                    <span className="
-          bg-red-500 hover:bg-red-600
-          px-3 py-2 
-          rounded-lg 
-          text-white text-xs font-medium
-          flex items-center gap-2
-          active:scale-95
-          transition-all hover:underline"> <SaveOff size={16} />Cancelar</span>
+                    <span className=" bg-red-500 hover:bg-red-600
+                    px-3 py-2 rounded-lg 
+                    text-white text-xs font-medium
+                    flex items-center gap-2
+                    active:scale-95
+                    transition-all hover:underline"
+                    >
+                      <SaveOff size={16} />Cancelar
+                    </span>
                   </button>
 
                   <button
@@ -264,14 +326,12 @@ export default function Home() {
                       updateProgress(selectedTask, progressInput);
                       setModalOpen(false);
                     }}
-                    className="
-          bg-blue-500 hover:bg-blue-600
-          px-3 py-2 
-          rounded-lg 
-          text-white text-xs font-medium
-          flex items-center gap-2
-          active:scale-95
-          transition-all"
+                    className=" bg-blue-500 hover:bg-blue-600
+                    px-3 py-2 rounded-lg
+                    text-white text-xs font-medium
+                    flex items-center gap-2
+                    active:scale-95
+                    transition-all"
                   >
                     <Save size={16} /> Salvar
                   </button>
@@ -283,15 +343,14 @@ export default function Home() {
 
           {/* MODAL DELETE */}
           {deleteModal && (
-            <div className="
-  fixed inset-0 z-50
-  flex items-center justify-center
-  bg-black/40 backdrop-blur-sm
-">
+            <div className="fixed inset-0 z-50
+            flex items-center justify-center
+            bg-black/40 backdrop-blur-sm"
+            >
               <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-xl w-full max-w-sm">
 
                 <h2 className="mb-4 font-semibold text-center text-slate-800 dark:text-white">
-                  Deseja deletar definitivamente?
+                  Deseja deletar "{taskToDelete?.title}" definitivamente?
                 </h2>
 
                 <div className="flex gap-2 justify-end">
@@ -305,7 +364,9 @@ export default function Home() {
                   <button
                     onClick={() => {
                       if (taskToDelete) {
-                        remove(taskToDelete.id as number);
+                        if (taskToDelete?.id) {
+                          remove(taskToDelete.id);
+                        }
                       }
                       setDeleteModal(false);
                     }}
@@ -325,9 +386,15 @@ export default function Home() {
           </h2>
 
           {todayTasks.length === 0 && (
-            <p className="text-sm text-gray-400 mb-3">
-              Nenhuma atividade hoje — bora começar uma nova?
-            </p>
+            <div className="text-sm text-gray-400 mb-3 flex flex-col gap-1">
+              <p>Nenhuma atividade hoje — bora começar uma nova?</p>
+              <button
+                onClick={() => document.getElementById("title")?.focus()}
+                className="text-blue-500 underline text-xs w-fit"
+              >
+                Criar tarefa agora
+              </button>
+            </div>
           )}
 
           <div className="space-y-3">
@@ -368,10 +435,26 @@ export default function Home() {
               ))}
             </AnimatePresence>
           </div>
-          {!loading && filtered.length === 0 && (
+          {!loading && todayTasks.length === 0 && backlogTasks.length === 0 && (
             <p className="text-gray-400 mt-4">
               Nenhuma tarefa encontrada
             </p>
+          )}
+
+          {/* INDICADOR DE SWIPE */}
+          {!mobileMenuOpen && (
+            <div className="md:hidden fixed left-0 top-1/2 -translate-y-1/2 z-40">
+              <div
+                className="flex items-center
+                bg-slate-200 dark:bg-slate-800
+                text-slate-600 dark:text-slate-300
+                px-2 py-1 rounded-r-lg
+                shadow-md
+                animate-pulse"
+              >
+                <ChevronRight size={18} />
+              </div>
+            </div>
           )}
 
           {mobileMenuOpen && (
@@ -386,11 +469,11 @@ export default function Home() {
               {/* sidebar animada */}
               <motion.div
                 drag="x"
-                dragConstraints={{ left: -300, right: 0 }}
+                dragConstraints={{ left: -260, right: 0 }}
+                dragElastic={0.2}
+                style={{ touchAction: "pan-y" }}
                 onDragEnd={(e, info) => {
-                  if (info.offset.x < -100) {
-                    setMobileMenuOpen(false);
-                  }
+                  if (info.offset.x < -80 || info.velocity.x < -500) { setMobileMenuOpen(false); }
                 }}
                 initial={{ x: -300 }}
                 animate={{ x: 0 }}
@@ -403,13 +486,18 @@ export default function Home() {
 
                 {/* header da sidebar */}
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="font-semibold text-lg">Menu</h2>
+                  <h2 className="font-semibold text-lg text-slate-700 dark:text-slate-200
+                    hover:bg-slate-200 dark:hover:bg-slate-800">Menu</h2>
 
                   <button
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800"
+                    aria-label="Fechar menu"
+                    className=" flex items-center gap-2
+                    px-2 py-1 p-2 rounded-lg 
+                    text-red-700 dark:text-red-400
+                    hover:bg-slate-200 dark:hover:bg-slate-800"
                   >
-                    <X size={20} />
+                    <X size={20} /> <span className="  text-red-700 dark:text-red-400 font-medium" >sair</span>
                   </button>
                 </div>
 
@@ -420,7 +508,6 @@ export default function Home() {
                   mobile
                   closeMobile={() => setMobileMenuOpen(false)}
                 />
-
 
               </motion.div>
             </div>
@@ -436,20 +523,17 @@ export default function Home() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="
-        fixed bottom-6 right-6 z-50
-        bg-slate-900 text-white
-        px-4 py-3 rounded-xl shadow-lg
-        text-sm font-medium
-      "
+            className="fixed bottom-6 right-6 z-50
+            bg-slate-900 text-white
+            px-4 py-3 rounded-xl shadow-lg
+            text-sm font-medium"
           >
             {toast}
           </motion.div>
         )}
       </AnimatePresence>
 
-
-
     </main>
   );
 }
+

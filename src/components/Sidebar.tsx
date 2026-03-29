@@ -23,12 +23,7 @@ export default function Sidebar({ setFilter, filter, closeMobile, mobile }: any)
 
   return (
     <aside className={`
-  ${mobile ? "flex w-full" : "hidden md:flex md:flex-col w-64"}`}> 
-
-      {/* Logo / título */}
-      <h2 className="text-xl font-bold mb-8 tracking-tight">
-        Study
-      </h2>
+  ${mobile ? "flex w-full" : "hidden md:flex md:flex-col w-64"} pt-6 px-2 `}> 
 
       {/* Menu */}
       <nav className="flex flex-col gap-2 text-sm px-2">
@@ -58,6 +53,7 @@ export default function Sidebar({ setFilter, filter, closeMobile, mobile }: any)
               <Icon size={18} />
               {item.label}
             </button>
+
           );
         })}
       </nav>
