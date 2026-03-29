@@ -1,6 +1,7 @@
+/// <reference types="vite/client" />
 import type { Study } from "../types";
 
-const API_URL = "http://localhost:3000/studies";
+const API_URL = import.meta.env.VITE_API_URL;
 
 // GET
 export const getStudies = async (): Promise<Study[]> => {
