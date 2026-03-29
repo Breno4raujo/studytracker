@@ -1,6 +1,22 @@
 import axios from "axios";
-const URL="http://localhost:3000/studies";
-export const get=()=>axios.get(URL).then(r=>r.data);
-export const post=(d:any)=>axios.post(URL,d).then(r=>r.data);
-export const patch=(id:number,d:any)=>axios.patch(`${URL}/${id}`,d).then(r=>r.data);
-export const del=(id:number)=>axios.delete(`${URL}/${id}`);
+
+const URL = import.meta.env.VITE_API_URL;
+
+export const get = async () => {
+  const response = await axios.get(URL);
+  return response.data;
+};
+
+export const post = async (data: any) => {
+  const response = await axios.post(URL, data);
+  return response.data;
+};
+
+export const patch = async (id: number, data: any) => {
+  const response = await axios.patch(`${URL}/${id}`, data);
+  return response.data;
+};
+
+export const del = async (id: number) => {
+  await axios.delete(`${URL}/${id}`);
+};
