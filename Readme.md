@@ -1,5 +1,6 @@
 # 📚 Study Tracker
 
+
 Aplicação web para gestão de estudos com foco em **reduzir carga cognitiva** e melhorar a retenção através de **revisões inteligentes baseadas em confiança**.
 
 ---
@@ -14,6 +15,8 @@ Estudantes autodidatas frequentemente enfrentam dificuldades em manter consistê
 * Sobrecarga mental ao tomar decisões
 
 A maioria das ferramentas é genérica ou complexa demais, o que acaba aumentando a fricção em vez de ajudar.
+
+
 
 ---
 
@@ -36,6 +39,7 @@ Estudantes autodidatas de programação, concursos ou faculdade que:
 * Estudam sem acompanhamento formal
 * Precisam revisar conteúdos com frequência
 * Buscam consistência sem complexidade
+
 
 ---
 
@@ -88,6 +92,7 @@ src/
 ✔ Separação clara de responsabilidades
 ✔ API isolada em services
 ✔ Custom hook para estado global
+
 
 ---
 
